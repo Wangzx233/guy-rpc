@@ -12,7 +12,7 @@ go get -u github.com/Wangzx233/guy-rpc
 	num := Num{}
 	
 	//注册Num{}结构体下的所有方法
-	server.Register(&num)
+	guy_rpc.Register(&num)
 	
 	lis, err := net.Listen("tcp", ":9999")
 	if err != nil {
