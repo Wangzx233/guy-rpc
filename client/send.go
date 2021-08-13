@@ -30,7 +30,7 @@ func (client *Client) send(call *Call) {
 	}
 }
 
-func (client *Client) ASyncCall(serviceMethod string, callBack interface{}, done chan *Call, args interface{}) *Call {
+func (client *Client) ASyncCall(Method string, callBack interface{}, done chan *Call, args interface{}) *Call {
 	if done == nil {
 		done = make(chan *Call, 10)
 	} else if cap(done) == 0 {
@@ -38,7 +38,7 @@ func (client *Client) ASyncCall(serviceMethod string, callBack interface{}, done
 	}
 
 	call := &Call{
-		Method:   serviceMethod,
+		Method:   Method,
 		Args:     args,
 		CallBack: callBack,
 		Done:     done,
@@ -48,7 +48,7 @@ func (client *Client) ASyncCall(serviceMethod string, callBack interface{}, done
 	return call
 }
 
-func (client *Client) SyncCall(serviceMethod string, callBack interface{}, args interface{}) error {
-	call := <-client.ASyncCall(serviceMethod, callBack, make(chan *Call, 1), args).Done
+func (client *Client) SyncCall(Method string, callBack interface{}, args interface{}) error {
+	call := <-client.ASyncCall(Method, callBack, make(chan *Call, 1), args).Done
 	return call.Error
 }

@@ -16,10 +16,10 @@ func NewServer() *Server {
 var DefaultServer = NewServer()
 
 // Accept 接收所有传过来的请求并进行处理
-func (server *Server) Accept(listener net.Listener) {
+func (server *Server) Accept(l net.Listener) {
 	for {
 		//接收部分
-		conn, err := listener.Accept()
+		conn, err := l.Accept()
 		if err != nil {
 			log.Println("rpc server: accept error:",err)
 			return

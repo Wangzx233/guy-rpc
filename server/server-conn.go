@@ -19,12 +19,13 @@ func (server *Server) ServeConn(conn io.ReadWriteCloser) {
 		log.Println("rpc server: options error: ", err)
 		return
 	}
-
 	//判断是否是guy-rpc的消息
 	if option.IdentityCode != IdentityCode {
 		log.Println("非guy-rpc消息")
 		return
 	}
+
+
 	//接收并处理conn中剩余的信息（header和body）
 	server.serveCodec(codec.NewJsonCodec(conn))
 

@@ -2,11 +2,14 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 	"guy-rpc/codec"
 	err "guy-rpc/error"
 	"guy-rpc/server"
 	"log"
 	"net"
+	"net/http"
+	"strings"
 	"sync"
 )
 
@@ -55,10 +58,35 @@ func (client *Client) IsAvailable() bool {
 }
 
 func Dial(network, address string, option *server.Option) (client *Client, err error) {
+
+	if address == ":8000" {
+
+		request, err := http.NewRequest("GET", "http://127.0.0.1:8000/_guy-rpc_/register", nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		request.Header.Set("Content-type", "application/json")
+		request.Header.Set("X-GuyRpc-Servers","")
+		client := &http.Client{}
+		response, err := client.Do(request)
+		if err != nil {
+			goto there
+		}
+		var get string
+
+		get = response.Header.Get("X-GuyRpc-Servers")
+
+		split := strings.Split(get, ",")
+
+		address = split[0]
+
+	}
+	there:
 	var tcpAddr *net.TCPAddr
 	tcpAddr, _ = net.ResolveTCPAddr(network, address)
 
 	conn, err := net.DialTCP(network, nil, tcpAddr)
+
 	if err != nil {
 		return nil, err
 	}

@@ -1,8 +1,11 @@
 package server
 
 import (
+	"net/http"
 	"reflect"
+	"time"
 )
+
 
 type Handler struct {
 	self   reflect.Value
@@ -15,7 +18,7 @@ type Handler struct {
 
 var Handlers = make(map[string]*Handler)
 
-func Register(str interface{}) {
+func Register(str interface{}, adr string) {
 
 	v := reflect.ValueOf(str)
 	t := reflect.TypeOf(str)
@@ -53,5 +56,44 @@ func Register(str interface{}) {
 			NumIn:  method.Type().NumIn(),
 			NumOut: method.Type().NumOut(),
 		}
+
+		registerCenter(adr)
 	}
+
+}
+
+func registerCenter(adr string)  {
+
+
+	request, err := http.NewRequest("POST", "http://127.0.0.1:8000/_guy-rpc_/register", nil)
+	if err != nil {
+		return
+	}
+
+	request.Header.Set("Content-type", "application/json")
+
+	request.Header.Set("X-GuyRpc-Servers",adr)
+	client := &http.Client{}
+	client.Timeout = time.Second
+
+	_, err = client.Do(request)
+	if err != nil {
+		client.CloseIdleConnections()
+		return
+	}
+
+	//conn, err := net.Dial("tcp", ":10086")
+	//if err != nil {
+	//	//说明服务中心未启动，直接return
+	//	return
+	//}
+	//
+	//c := codec.NewJsonCodec(conn)
+	//
+	//var h = codec.Header{Method: method}
+	//err = c.Write(&h, adr)
+	//if err != nil {
+	//	log.Println("server register err: write err:",err)
+	//}
+
 }

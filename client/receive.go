@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"guy-rpc/codec"
-	"reflect"
 )
 
 //接收返回的消息
@@ -22,10 +21,10 @@ func (client *Client) receive() {
 
 		switch {
 		case call == nil:
-			err = client.c.ReadBody(reflect.ValueOf(""))
+			err = client.c.ReadBody("")
 		case h.Error != "":
 			call.Error = fmt.Errorf(h.Method)
-			err = client.c.ReadBody(reflect.ValueOf(""))
+			err = client.c.ReadBody(nil)
 			call.done()
 		default:
 			err = client.c.ReadBody(call.CallBack)
