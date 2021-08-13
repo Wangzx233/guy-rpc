@@ -37,8 +37,8 @@ func (num *Num) Add(arg Arg) int {
 ```go
 
 func main(){
-    //如果需要使用服务中心，地址应为服务中心地址
-    c, _ := guy_rpc.Dial("tcp", ":8000", 	guy_rpc.DefaultOption)
+    //第二个参数为服务端地址，第四个参数为服务中心地址。根据需要p2p模式或cs模式选填一个即可，无服务中心时第四个参数不能填
+    c, _ := guy_rpc.Dial("tcp", "", 	guy_rpc.DefaultOption,":8000")
     
 	defer func() { _ = c.Close() }()
 

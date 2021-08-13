@@ -15,7 +15,6 @@ func (client *Client) receive() {
 		if err != nil {
 			break
 		}
-
 		//每处理一个call，就从待处理map中删除一个
 		call := client.removeCall(h.CallID)
 

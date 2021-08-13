@@ -18,7 +18,7 @@ type Handler struct {
 
 var Handlers = make(map[string]*Handler)
 
-func Register(str interface{}, adr string) {
+func Register(str interface{},localAdr string,centerAdr ...string) {
 
 	v := reflect.ValueOf(str)
 	t := reflect.TypeOf(str)
@@ -57,30 +57,31 @@ func Register(str interface{}, adr string) {
 			NumOut: method.Type().NumOut(),
 		}
 
-		registerCenter(adr)
+		if centerAdr!=nil {
+			registerCenter(localAdr,centerAdr[0])
+		}
 	}
 
 }
 
-func registerCenter(adr string)  {
+func registerCenter(localAdr string,centerAdr string)  {
 
+		request, err := http.NewRequest("POST", "http://"+centerAdr+"/_guy-rpc_/register", nil)
+		if err != nil {
+			return
+		}
+		request.Header.Set("Content-type", "application/json")
 
-	request, err := http.NewRequest("POST", "http://127.0.0.1:8000/_guy-rpc_/register", nil)
-	if err != nil {
-		return
-	}
+		request.Header.Set("X-GuyRpc-Servers",localAdr)
+		client := &http.Client{}
+		client.Timeout = time.Second
 
-	request.Header.Set("Content-type", "application/json")
+		_, err = client.Do(request)
+		if err != nil {
+			client.CloseIdleConnections()
+			return
+		}
 
-	request.Header.Set("X-GuyRpc-Servers",adr)
-	client := &http.Client{}
-	client.Timeout = time.Second
-
-	_, err = client.Do(request)
-	if err != nil {
-		client.CloseIdleConnections()
-		return
-	}
 
 	//conn, err := net.Dial("tcp", ":10086")
 	//if err != nil {

@@ -5,6 +5,11 @@ import (
 	"guy-rpc/server"
 )
 
-func Dial(network, address string, option *server.Option) (c *client.Client, err error)  {
-	return client.Dial(network,address,option)
+func Dial(network, address string, option *server.Option,centerAdr ...string) (c *client.Client, err error)  {
+	if centerAdr!=nil {
+		return client.Dial(network,address,option,centerAdr[0])
+	}else {
+		return client.Dial(network,address,option)
+	}
+
 }

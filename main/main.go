@@ -16,11 +16,11 @@ func startServer() {
 	num := Num{}
 
 
-	l, err := net.Listen("tcp", ":10022")
+	l, err := net.Listen("tcp", ":9999")
 	if err != nil {
 		log.Fatal("network error:", err)
 	}
-	guy_rpc.Register(&num,l.Addr().String())
+	guy_rpc.Register(&num,l.Addr().String(),":8000")
 
 	//addr <- l.Addr().String()
 	guy_rpc.Accept(l)
@@ -40,7 +40,7 @@ func main() {
 	go startServer()
 	fmt.Println("server started")
 	time.Sleep(time.Second)
-	c, _ := guy_rpc.Dial("tcp", ":8000", guy_rpc.DefaultOption)
+	c, _ := guy_rpc.Dial("tcp", "", guy_rpc.DefaultOption,":8000")
 	fmt.Println("client started")
 	defer func() { _ = c.Close() }()
 

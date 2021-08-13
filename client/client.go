@@ -57,16 +57,16 @@ func (client *Client) IsAvailable() bool {
 	return !client.isClose && !client.stop
 }
 
-func Dial(network, address string, option *server.Option) (client *Client, err error) {
+func Dial(network, address string, option *server.Option, centerAdr ...string) (client *Client, err error) {
 
-	if address == ":8000" {
+	if centerAdr != nil {
 
-		request, err := http.NewRequest("GET", "http://127.0.0.1:8000/_guy-rpc_/register", nil)
+		request, err := http.NewRequest("GET", "http://"+centerAdr[0]+"/_guy-rpc_/register", nil)
 		if err != nil {
 			fmt.Println(err)
 		}
 		request.Header.Set("Content-type", "application/json")
-		request.Header.Set("X-GuyRpc-Servers","")
+		request.Header.Set("X-GuyRpc-Servers", "")
 		client := &http.Client{}
 		response, err := client.Do(request)
 		if err != nil {
@@ -79,14 +79,13 @@ func Dial(network, address string, option *server.Option) (client *Client, err e
 		split := strings.Split(get, ",")
 
 		address = split[0]
-
+		fmt.Println(address)
 	}
-	there:
+there:
 	var tcpAddr *net.TCPAddr
 	tcpAddr, _ = net.ResolveTCPAddr(network, address)
 
 	conn, err := net.DialTCP(network, nil, tcpAddr)
-
 	if err != nil {
 		return nil, err
 	}

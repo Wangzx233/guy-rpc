@@ -16,7 +16,13 @@ var DefaultOption = &server.Option{
 	CodecType:    "application/json",
 }
 
-func Register(str interface{},adr string)  {
+func Register(str interface{},localAdr string,centerAdr ...string)  {
 
-	server.Register(str,adr)
+	if centerAdr!=nil {
+		server.Register(str,localAdr,centerAdr[0])
+	}else {
+		server.Register(str,localAdr)
+	}
+
+
 }

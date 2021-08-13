@@ -44,7 +44,6 @@ func (client *Client) ASyncCall(Method string, callBack interface{}, done chan *
 		Done:     done,
 	}
 	client.send(call)
-
 	return call
 }
 

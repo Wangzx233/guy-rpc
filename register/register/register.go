@@ -1,7 +1,6 @@
 package register
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"sort"
@@ -73,7 +72,6 @@ func (r *RPCRegister) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		r.putServer(addr)
-		fmt.Println(addr)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
