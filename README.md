@@ -1,5 +1,13 @@
 # guy-rpc
 
+#### 功能
+
+- [x] client端 远程调用
+- [x] server端 注册服务
+- [x] 服务中心
+- [x] 心跳包
+- [x] 支持并发调用
+
 ## 快速开始
 
 ```
@@ -20,7 +28,11 @@ func main(){
 	if err != nil {
 		log.Fatal("network error:", err)
 	}
-	
+    
+    //发送心跳包（可选），只能在有服务中心时使用。"/_guy-rpc_/register"为固定值
+	register.Heartbeat("http://127.0.0.1:8000/_guy-rpc_/register", "tcp@"+l.Addr().String(), 0)
+    
+    //开始监听
 	guy_rpc.Accept(lis)
 }
 	
@@ -49,6 +61,7 @@ func main(){
 			defer wg.Done()
 
 			var reply int
+            //如果入参为多个，请打包为结构体，出参同理
 			if err := c.SyncCall("Add", &reply, Arg{
 				A: i,
 				B: i+5,

@@ -105,6 +105,7 @@ func sendHeartbeat(registry, addr string) error {
 	log.Println(addr, "send heart beat to registry", registry)
 	c := &http.Client{}
 	request, _ := http.NewRequest("POST", registry, nil)
+
 	request.Header.Set("X-GuyRpc-Servers", addr)
 	_, err := c.Do(request)
 	if err != nil {
