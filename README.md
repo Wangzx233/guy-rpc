@@ -61,7 +61,7 @@ func main(){
 			defer wg.Done()
 
 			var reply int
-            //如果入参为多个，请打包为结构体，出参同理
+            //如果入参为多个，请打包为结构体，出参同理。无入参或出参用空结构体占位即可
 			if err := c.SyncCall("Add", &reply, Arg{
 				A: i,
 				B: i+5,
